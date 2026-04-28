@@ -1,0 +1,15 @@
+
+CREATE TABLE Satellite (SatID INT IDENTITY(1,1) PRIMARY KEY, 
+						Name VARCHAR(300) NOT NULL, Launch_Date DATE );
+
+CREATE TABLE Images (ImageID INT IDENTITY(1,1) PRIMARY KEY,  
+					File_Path VARCHAR(300), Capture_Date DATE,
+					SatID INT,
+					FOREIGN KEY (SatID) REFERENCES Satellite(SatID) );
+CREATE TABLE Continent (ContinentID INT IDENTITY(1,1) PRIMARY KEY, Name VARCHAR(300) NOT NULL);
+
+CREATE TABLE Country (CountryID INT IDENTITY(1,1) PRIMARY KEY, Name VARCHAR(300) NOT NULL,
+					  ContinentID INT
+					  FOREIGN KEY(ContinentID) REFERENCES Continent(ContinentID));
+
+
