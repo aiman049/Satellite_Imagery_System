@@ -1,0 +1,39 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satellite Imagery Portal</title>
+<link rel="stylesheet" href="explore_data.css">
+</head>
+
+
+<body>
+<div class="container">
+    <h1>Satellite Imagery Portal</h1>
+    <p>Access and explore satellite imagery data of earth</p>
+
+    <input type="text" id="countryInput" class="input-box" placeholder="Enter country name (e.g. Pakistan)">
+
+    <button class="btn" onclick="submitCountry()">Search</button>
+
+    <footer>
+         AI-02 database project
+    </footer>
+</div>
+
+
+<script>
+    function submitCountry() {
+        const country = document.getElementById("countryInput").value.trim();
+        
+        if(country === "") {
+            alert("Please enter a country name.");
+            return;
+        }
+
+</script>
+</body>
+</html>
+
