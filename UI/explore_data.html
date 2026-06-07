@@ -34,11 +34,10 @@
       </header>
 
       <div class="search-controls">
-        <label class="visually-hidden" for="countrySelect">Select Country</label>
+        <label for="countrySelect" class="visually-hidden">Select a Country</label>
         <select id="countrySelect" class="input-box">
           <option value="">Select Country...</option>
         </select>
-
         <button class="btn btn-primary" onclick="goToResults()">
           Search Region
         </button>
@@ -57,56 +56,6 @@
 
   </div>
 
-  <script>
-    const BASE = '../Php';
-
-    // ── Load countries from DB into dropdown ─────────────────
-    window.addEventListener('DOMContentLoaded', () => {
-      fetch(`${BASE}/phpget_countries.php`)
-        .then(r => r.json())
-        .then(countries => {
-          const select = document.getElementById('countrySelect');
-          countries.forEach(c => {
-            const opt       = document.createElement('option');
-            opt.value       = c.Country_ID;
-            opt.dataset.name = c.Country_Name;
-            opt.textContent = c.Country_Name;
-            select.appendChild(opt);
-          });
-        })
-        .catch(() => {
-          alert('Could not load countries. Make sure XAMPP is running.');
-        });
-    });
-
-    // ── On Search button click → go to results page ──────────
-    function goToResults() {
-      const select      = document.getElementById('countrySelect');
-      const countryId   = select.value;
-      const countryName = select.options[select.selectedIndex]?.dataset.name || '';
-
-      if (!countryId) {
-        alert('Please select a country first.');
-        return;
-      }
-
-      // Pass country info to results page via URL
-      window.location.href = `results.html?country_id=${countryId}&country=${encodeURIComponent(countryName)}`;
-    }
-
-    // ── Globe setup ──────────────────────────────────────────
-    window.addEventListener('DOMContentLoaded', () => {
-      const globe = Globe()
-        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
-        .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
-        .width(document.getElementById('globeViz').offsetWidth)
-        .height(window.innerHeight)(document.getElementById('globeViz'));
-
-      globe.controls().autoRotate      = true;
-      globe.controls().autoRotateSpeed = 0.6;
-      globe.controls().enableZoom      = true;
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
