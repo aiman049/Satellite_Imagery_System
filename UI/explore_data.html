@@ -1,55 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<link rel="stylesheet" href="explore_data.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geo-Satellite Imagery Portal</title>
-    
-    <script src="https://unpkg.com/three"></script>
-    <script src="https://unpkg.com/globe.gl"></script>
-    
-    <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="explore_data.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geo-Satellite Imagery Portal</title>
+
+  <script src="https://unpkg.com/three"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-    <div class="container">
-        <main class="left-panel">
-            <header>
-                <h1>Geo-Satellite Imagery</h1>
-                <p>Explore Earth Satellite Imagery Data for observation.</p>
-            </header>
+  <div class="container">
+    <main class="left-panel">
+      <header>
+        <h1>Geo-Satellite Imagery</h1>
+        <p>Explore Earth Satellite Imagery Data for observation.</p>
+      </header>
 
-            <div class="search-controls">
-                <label for="countryInput" class="visually-hidden">Select a Country</label>
-                <select id="countryInput" class="input-box">
-                    <option value="">Select Country...</option>
-                    <option value="Pakistan">Pakistan</option>
-                    <option value="Turkey">Turkey</option>
-                    <option value="USA">USA</option>
-                    <option value="Japan">Japan</option>
-                    <option value="China">China</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Australia">Australia</option>
-                </select>
+      <div class="search-controls">
+        <label for="countryInput" class="visually-hidden">Select a Country</label>
+        <select id="countryInput" class="input-box">
+          <option value="">Select Country...</option>
+          <option value="Pakistan">Pakistan</option>
+          <option value="Turkey">Turkey</option>
+          <option value="USA">USA</option>
+          <option value="Japan">Japan</option>
+          <option value="China">China</option>
+          <option value="Brazil">Brazil</option>
+          <option value="Australia">Australia</option>
+        </select>
 
-                <button class="btn btn-primary" onclick="submitCountry()">
-                    Search Region
-                </button>
-            </div>
-
-
-            <footer>
-                <p>A Project by 'WAN'_2026</p>
-            </footer>
-        </main>
+        <button class="btn btn-primary" onclick="submitCountry()">
+          Search Region
+        </button>
+      </div>
 
 
-        <div class="right-panel">
-            <div id="globeViz"></div>
-        </div>
+      <footer>
+        <p>A Project by 'WAN'_2026</p>
+      </footer>
+    </main>
+
+
+    <div class="right-panel">
+      <div id="globeViz"></div>
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
+  </div>
 
+  <footer>AI-02 Database Project — WAN Satellite Imagery System</footer>
+
+  </div>
+
+  <script>
+    const BASE = '../Php';
+    let currentCountryId = '';
+    let currentTerrain = '';
+
+    // ── Load countries on page load ──────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch(`${BASE}/phpget_countries.php`)
+        .then(r => r.json())
+        .then(countries => {
+          const select = document.getElementById('countrySelect');
+          countries.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.Country_ID;
+            opt.textContent = `${c.Country_Name} (${c.Continent_Name})`;
+            select.appendChild(opt);
+          });
+        })
+        .catch(() => {
+          document.getElementById('imageGrid').innerHTML = `
+            <div class="state-box">
+              <div class="icon">⚠️</div>
+              <p>Could not connect to server. Make sure XAMPP is running.</p>
+            </div>`;
+        });
+    });
+
+    // ── Country dropdown changed ─────────────────────────────
+    function onCountryChange() {
+      currentCountryId = document.getElementById('countrySelect').value;
+      if (currentCountryId) loadImages();
+    }
+
+    // ── Terrain dropdown changed ─────────────────────────────
+    function filterByTerrain() {
+      currentTerrain = document.getElementById('terrainSelect').value;
+      if (currentCountryId) loadImages();
+    }
+
+    // ── Pill clicked ─────────────────────────────────────────
+    function setPill(el, terrain) {
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      currentTerrain = terrain;
+      document.getElementById('terrainSelect').value = terrain;
+      if (currentCountryId) loadImages();
+    }
+
+    // ── Fetch and display images ─────────────────────────────
+    function loadImages() {
+      currentCountryId = document.getElementById('countrySelect').value;
+
+      if (!currentCountryId) {
+        alert('Please select a country first.');
+        return;
+      }
+
+      // Show loading spinner
+      document.getElementById('imageGrid').innerHTML = '<div class="spinner"></div>';
+      document.getElementById('statsBar').style.display = 'none';
+
+      let url = `${BASE}/phpget_images.php?country_id=${currentCountryId}`;
+      if (currentTerrain) url += `&terrain=${encodeURIComponent(currentTerrain)}`;
+
+      fetch(url)
+        .then(r => r.json())
+        .then(images => renderImages(images))
+        .catch(() => {
+          document.getElementById('imageGrid').innerHTML = `
+            <div class="state-box">
+              <div class="icon">⚠️</div>
+              <p>Failed to load images. Check your PHP files.</p>
+            </div>`;
+        });
+    }
+
+    // ── Build image cards ────────────────────────────────────
+    function renderImages(images) {
+      const grid = document.getElementById('imageGrid');
+      const statsBar = document.getElementById('statsBar');
+      const countryLabel = document.getElementById('countryLabel');
+      const imageCount = document.getElementById('imageCount');
+
+      if (images.length === 0) {
+        grid.innerHTML = `
+          <div class="state-box">
+            <div class="icon">🔍</div>
+            <p>No images found for this selection.</p>
+          </div>`;
+        statsBar.style.display = 'none';
+        return;
+      }
+
+      // Update stats bar
+      const countryName = document.getElementById('countrySelect').selectedOptions[0].text.split(' (')[0];
+      countryLabel.textContent = currentTerrain ? `${countryName} → ${currentTerrain}` : countryName;
+      imageCount.textContent = images.length;
+      statsBar.style.display = 'block';
+
+      // Render cards
+      grid.innerHTML = images.map(img => {
+        const terrain = img.Terrain_Type || '';
+        const badgeClass = `badge-${terrain.replace(/\s+/g, '')}`;
+        const imgPath = `../Images/${img.Image_Path.replace('Images/', '')}`;
+
+        return `
+          <div class="card">
+            <img
+              class="card-image"
+              src="${imgPath}"
+              alt="${img.Loc_Name}"
+              onerror="this.style.display='none';
+                       this.nextElementSibling.style.display='flex';"
+            >
+            <div class="card-image-placeholder" style="display:none;">
+              <span class="icon">${terrainIcon(terrain)}</span>
+              <span>${terrain}</span>
+            </div>
+            <div class="card-body">
+              <span class="terrain-badge ${badgeClass}">${terrain}</span>
+              <div class="card-title">${img.Loc_Name}</div>
+              <div class="card-desc">${img.Description || 'No description available.'}</div>
+              <div class="card-meta">
+                <span>🛰️ ${img.Sat_Name}</span>
+                <span>📅 ${img.Capture_Year}</span>
+                <span>🌍 ${img.Country_Name}</span>
+                <span>🔭 ${img.Orbit}</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Terrain emoji icons ──────────────────────────────────
+    function terrainIcon(terrain) {
+      const icons = {
+        Urban: '🏙️',
+        Desert: '🏜️',
+        Forest: '🌲',
+        Mountain: '⛰️',
+        Coastal: '🌊',
+        Agricultural: '🌾',
+        Wetland: '🌿'
+      };
+      return icons[terrain] || '🛰️';
+    }
+  </script>
+
+</body>
+
+</html>
