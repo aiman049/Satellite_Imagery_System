@@ -1,39 +1,55 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Satellite Imagery Portal</title>
 <link rel="stylesheet" href="explore_data.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo-Satellite Imagery Portal</title>
+    
+    <script src="https://unpkg.com/three"></script>
+    <script src="https://unpkg.com/globe.gl"></script>
+    
+    <link rel="stylesheet" href="styles.css">
 </head>
-
-
 <body>
-<div class="container">
-    <h1>Satellite Imagery Portal</h1>
-    <p>Access and explore satellite imagery data of earth</p>
 
-    <input type="text" id="countryInput" class="input-box" placeholder="Enter country name (e.g. Pakistan)">
+    <div class="container">
+        <main class="left-panel">
+            <header>
+                <h1>Geo-Satellite Imagery</h1>
+                <p>Explore Earth Satellite Imagery Data for observation.</p>
+            </header>
 
-    <button class="btn" onclick="submitCountry()">Search</button>
+            <div class="search-controls">
+                <label for="countryInput" class="visually-hidden">Select a Country</label>
+                <select id="countryInput" class="input-box">
+                    <option value="">Select Country...</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="USA">USA</option>
+                    <option value="Japan">Japan</option>
+                    <option value="China">China</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Australia">Australia</option>
+                </select>
 
-    <footer>
-         AI-02 database project
-    </footer>
-</div>
+                <button class="btn btn-primary" onclick="submitCountry()">
+                    Search Region
+                </button>
+            </div>
 
 
-<script>
-    function submitCountry() {
-        const country = document.getElementById("countryInput").value.trim();
-        
-        if(country === "") {
-            alert("Please enter a country name.");
-            return;
-        }
+            <footer>
+                <p>A Project by 'WAN'_2026</p>
+            </footer>
+        </main>
 
-</script>
+
+        <div class="right-panel">
+            <div id="globeViz"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
 
