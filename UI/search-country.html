@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="explore_data.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo-Satellite Imagery Portal</title>
+    
+    <script src="https://unpkg.com/three"></script>
+    <script src="https://unpkg.com/globe.gl"></script>
+    
+    <link rel="stylesheet" href="search-country.css">
+</head>
+<body>
+
+    <div class="container">
+        <main class="left-panel">
+            <header>
+                <h1>Geo-Satellite Imagery</h1>
+                <p>Explore Earth Satellite Imagery Data for observation.</p>
+            </header>
+
+            <div class="search-controls">
+                <label for="countryInput" class="visually-hidden">Select a Country</label>
+                <select id="countryInput" class="input-box">
+                    <option value="">Select Country...</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="USA">USA</option>
+                    <option value="Japan">Japan</option>
+                    <option value="China">China</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Australia">Australia</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="submitCountry()">
+                    Search Region
+                </button>
+            </div>
+
+
+            <footer>
+                <p>A Project by 'WAN'_2026</p>
+            </footer>
+        </main>
+
+
+        <div class="right-panel">
+            <div id="globeViz"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
