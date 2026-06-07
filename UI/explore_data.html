@@ -74,13 +74,74 @@
     </div>
 
     <footer>AI-02 Database Project — WAN Satellite Imagery System</footer>
+  </div>
 
+  <!-- LIGHTBOX OVERLAY -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <div class="lb-content" onclick="event.stopPropagation()">
+
+      <!-- Control buttons -->
+      <button class="lb-close"    onclick="closeLightbox()">✕</button>
+      <button class="lb-zoom-in"  onclick="zoomIn()">＋</button>
+      <button class="lb-zoom-out" onclick="zoomOut()">－</button>
+      <button class="lb-reset"    onclick="resetZoom()">↺</button>
+
+      <!-- Image -->
+      <div class="lb-image-wrap" id="lbWrap">
+        <img id="lbImg" src="" alt="">
+      </div>
+
+      <!-- Full Info Panel -->
+      <div class="lb-info">
+
+        <div class="lb-location" id="lbLocation"></div>
+
+        <div class="lb-description" id="lbDescription"></div>
+
+        <div class="lb-meta-grid">
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">🛰️ Satellite</span>
+            <span class="lb-meta-value" id="lbSatName"></span>
+          </div>
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">🔧 Model</span>
+            <span class="lb-meta-value" id="lbModel"></span>
+          </div>
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">🌐 Orbit</span>
+            <span class="lb-meta-value" id="lbOrbit"></span>
+          </div>
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">📅 Captured</span>
+            <span class="lb-meta-value" id="lbYear"></span>
+          </div>
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">🌍 Country</span>
+            <span class="lb-meta-value" id="lbCountry"></span>
+          </div>
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">🏔️ Terrain</span>
+            <span class="lb-meta-value" id="lbTerrain"></span>
+          </div>
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">📍 Latitude</span>
+            <span class="lb-meta-value" id="lbLat"></span>
+          </div>
+          <div class="lb-meta-item">
+            <span class="lb-meta-label">📍 Longitude</span>
+            <span class="lb-meta-value" id="lbLng"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <script>
     const BASE = '../Php';
     let currentCountryId = '';
     let currentTerrain   = '';
+    let currentScale     = 1;
 
     // ── Load countries on page load ──────────────────────────
     window.addEventListener('DOMContentLoaded', () => {
@@ -128,13 +189,11 @@
     // ── Fetch and display images ─────────────────────────────
     function loadImages() {
       currentCountryId = document.getElementById('countrySelect').value;
-
       if (!currentCountryId) {
         alert('Please select a country first.');
         return;
       }
 
-      // Show loading spinner
       document.getElementById('imageGrid').innerHTML = '<div class="spinner"></div>';
       document.getElementById('statsBar').style.display = 'none';
 
@@ -154,7 +213,11 @@
     }
 
     // ── Build image cards ────────────────────────────────────
+    // Store image data globally so lightbox can access full object
+    let allImages = [];
+
     function renderImages(images) {
+      allImages = images;
       const grid         = document.getElementById('imageGrid');
       const statsBar     = document.getElementById('statsBar');
       const countryLabel = document.getElementById('countryLabel');
@@ -170,14 +233,12 @@
         return;
       }
 
-      // Update stats bar
-      const countryName    = document.getElementById('countrySelect').selectedOptions[0].text.split(' (')[0];
+      const countryName        = document.getElementById('countrySelect').selectedOptions[0].text.split(' (')[0];
       countryLabel.textContent = currentTerrain ? `${countryName} → ${currentTerrain}` : countryName;
       imageCount.textContent   = images.length;
       statsBar.style.display   = 'block';
 
-      // Render cards
-      grid.innerHTML = images.map(img => {
+      grid.innerHTML = images.map((img, index) => {
         const terrain    = img.Terrain_Type || '';
         const badgeClass = `badge-${terrain.replace(/\s+/g, '')}`;
         const imgPath    = `../Images/${img.Image_Path.replace('Images/', '')}`;
@@ -188,6 +249,7 @@
               class="card-image"
               src="${imgPath}"
               alt="${img.Loc_Name}"
+              onclick="openLightbox(${index}, '${imgPath}')"
               onerror="this.style.display='none';
                        this.nextElementSibling.style.display='flex';"
             >
@@ -223,7 +285,70 @@
       };
       return icons[terrain] || '🛰️';
     }
-  </script>
 
+    // ── Open lightbox with full data ─────────────────────────
+    function openLightbox(index, imgPath) {
+      const img    = allImages[index];
+      currentScale = 1;
+
+      document.getElementById('lbImg').src             = imgPath;
+      document.getElementById('lbImg').style.transform = 'scale(1)';
+
+      // Location
+      document.getElementById('lbLocation').textContent    = img.Loc_Name || '';
+
+      // Description
+      document.getElementById('lbDescription').textContent = img.Description || 'No description available.';
+
+      // Meta fields
+      document.getElementById('lbSatName').textContent  = img.Sat_Name    || '—';
+      document.getElementById('lbModel').textContent    = img.Model       || '—';
+      document.getElementById('lbOrbit').textContent    = img.Orbit       || '—';
+      document.getElementById('lbYear').textContent     = img.Capture_Year|| '—';
+      document.getElementById('lbCountry').textContent  = img.Country_Name|| '—';
+      document.getElementById('lbTerrain').textContent  = img.Terrain_Type|| '—';
+      document.getElementById('lbLat').textContent      = img.Latitude    || '—';
+      document.getElementById('lbLng').textContent      = img.Longitude   || '—';
+
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // ── Close lightbox ───────────────────────────────────────
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+      resetZoom();
+    }
+
+    // ── Zoom controls ────────────────────────────────────────
+    function zoomIn() {
+      currentScale = Math.min(currentScale + 0.3, 4);
+      document.getElementById('lbImg').style.transform = `scale(${currentScale})`;
+    }
+    function zoomOut() {
+      currentScale = Math.max(currentScale - 0.3, 0.5);
+      document.getElementById('lbImg').style.transform = `scale(${currentScale})`;
+    }
+    function resetZoom() {
+      currentScale = 1;
+      document.getElementById('lbImg').style.transform = 'scale(1)';
+    }
+
+    // ── Keyboard shortcuts ───────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === '+')      zoomIn();
+      if (e.key === '-')      zoomOut();
+      if (e.key === '0')      resetZoom();
+    });
+
+    // ── Scroll to zoom ───────────────────────────────────────
+    document.getElementById('lbWrap').addEventListener('wheel', e => {
+      e.preventDefault();
+      e.deltaY < 0 ? zoomIn() : zoomOut();
+    }, { passive: false });
+
+  </script>
 </body>
 </html>
