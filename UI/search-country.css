@@ -25,6 +25,55 @@ body {
     color: var(--text-main);
 }
 
+nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.35);
+  
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.nav-container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: white;
+}
+
+.logo span {
+  color: #00d9ff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 35px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 15px;
+  transition: 0.3s;
+  text-transform: uppercase;
+}
+
+.nav-links a:hover {
+  color: #00d9ff;
+}
+
 body::before {
     content: "";
     position: absolute;
