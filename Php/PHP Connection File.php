@@ -1,14 +1,14 @@
 <?php
 $host     = "localhost";
 $user     = "root";
-$password = "";            // blank by default in XAMPP
+$password = "";
 $database = "SatelliteIDB";
 
 $conn = new mysqli($host, $user, $password, $database);
 
 if ($conn->connect_error) {
     http_response_code(500);
-    die(json_encode(["success" => false, "message" => "DB Connection failed: " . $conn->connect_error]));
+    die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
 }
 
 header("Content-Type: application/json");

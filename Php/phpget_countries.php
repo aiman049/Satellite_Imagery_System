@@ -1,12 +1,13 @@
 <?php
-require_once 'db_connect.php';
+require_once 'PHP Connection File.php';
 
-$sql = "SELECT c.Country_ID, c.Country_Name, c.Capital, cn.Continent_Name
+$sql = "SELECT c.Country_ID, c.Country_Name, c.Capital, co.Continent_Name
         FROM Country c
-        JOIN Continent cn ON c.Continent_ID = cn.Continent_ID";
+        JOIN Continent co ON c.Continent_ID = co.Continent_ID
+        ORDER BY c.Country_Name";
 
 $result = $conn->query($sql);
-$data = [];
+$data   = [];
 while ($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
