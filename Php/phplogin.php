@@ -1,28 +1,24 @@
 <?php
+
 require_once 'PHP Connection File.php';
 
-$input = json_decode(file_get_contents("php://input"), true);
+$fullname = $_POST['fullname'];
+$phone    = $_POST['phone'];
+$email    = $_POST['email'];
+$password = hash('sha256', $_POST['password']);
 
-if (!$input || empty($input['email']) || empty($input['password'])) {
-    echo json_encode(["success" => false, "message" => "Email and password are required."]);
-    exit;
+$sql = "INSERT INTO User
+        (User_Name, Phone, Email, Password, Role)
+        VALUES
+        ('$fullname', '$phone', '$email', '$password', 'User')";
+
+if($conn->query($sql))
+{
+    echo "Registration Successful";
+}
+else
+{
+    echo "Error: " . $conn->error;
 }
 
-$email    = $conn->real_escape_string($input['email']);
-$password = strtoupper(hash('sha256', $input['password']));
-
-$sql    = "SELECT User_ID, User_Name, Email, Role
-           FROM User
-           WHERE Email = '$email' AND Password = '$password'
-           LIMIT 1";
-$result = $conn->query($sql);
-
-if ($result->num_rows === 1) {
-    $user = $result->fetch_assoc();
-    echo json_encode(["success" => true, "user" => $user]);
-} else {
-    echo json_encode(["success" => false, "message" => "Invalid email or password."]);
-}
-
-$conn->close();
 ?>
