@@ -1,72 +1,58 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const countries = {
-        Pakistan: { lat: 30.3753, lng: 69.3451 },
-        Turkey: { lat: 38.9637, lng: 35.2433 },
-        USA: { lat: 37.0902, lng: -95.7129 },
-        Japan: { lat: 36.2048, lng: 138.2529 },
-        China: { lat: 35.8617, lng: 104.1954 },
-        Brazil: { lat: -14.2350, lng: -51.9253 },
-        Australia: { lat: -25.2744, lng: 133.7751 }
-    };
+const BASE = '../Php';
 
-    const GlobeConstructor = window.Globe || window.GlobeGL;
-    if (!GlobeConstructor) return;
+window.addEventListener('DOMContentLoaded', () => {
 
-    const container = document.getElementById('globeViz');
-    if (!container) return;
+    // ── Load countries from DB ────────────────────────────────
+    fetch(`${BASE}/phpget_countries.php`)
+        .then(r => r.json())
+        .then(countries => {
+            const select = document.getElementById('countrySelect');
+            if (!select) return;
+            countries.forEach(c => {
+                const opt        = document.createElement('option');
+                opt.value        = c.Country_ID;
+                opt.dataset.name = c.Country_Name;
+                opt.textContent  = c.Country_Name;
+                select.appendChild(opt);
+            });
+        })
+        .catch(() => {
+            console.error('Could not load countries. Make sure XAMPP is running.');
+        });
 
-    const globeInstance = GlobeConstructor()(container)
-        .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-        .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-        .backgroundColor('rgba(0,0,0,0)');
+    // ── Init Globe ────────────────────────────────────────────
+    const globeContainer = document.getElementById('globeViz');
+    if (!globeContainer) return;
 
-    setTimeout(() => {
-        globeInstance.width(container.clientWidth);
-        globeInstance.height(container.clientHeight);
-    }, 100);
+    const globe = Globe()
+        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+        .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+        .width(globeContainer.offsetWidth)
+        .height(window.innerHeight)(globeContainer);
 
-    const resizeObserver = new ResizeObserver(entries => {
-        for (let entry of entries) {
-            globeInstance.width(entry.contentRect.width);
-            globeInstance.height(entry.contentRect.height);
-        }
-    });
-    resizeObserver.observe(container);
+    globe.controls().autoRotate      = true;
+    globe.controls().autoRotateSpeed = 0.6;
+    globe.controls().enableZoom      = true;
 
- 
-    globeInstance.controls().autoRotate = true;
-    globeInstance.controls().autoRotateSpeed = 0.5; 
-
-    window.focusCountry = function(country) {
-        if (!countries[country]) return;
-
-        document.getElementById("countryInput").value = country;
-
-        globeInstance.pointOfView(
-            {
-                lat: countries[country].lat,
-                lng: countries[country].lng,
-                altitude: 1.8
-            },
-            1500
-        );
-    };
-
-    window.submitCountry = function() {
-        const country = document.getElementById("countryInput").value;
-
-        if (country === "") {
-            alert("Please select a target country from the control panel.");
-            return;
-        }
-
-        alert(`Establishing data link... Querying imagery databases for: ${country}`);
-    };
-
-    document.getElementById("countryInput").addEventListener("change", function() {
-        const country = this.value;
-        if (country) {
-            window.focusCountry(country);
-        }
+    window.addEventListener('resize', () => {
+        globe.width(globeContainer.offsetWidth);
+        globe.height(window.innerHeight);
     });
 });
+
+// ── Open imagery page in new tab ──────────────────────────────
+function openGallery() {
+    const select      = document.getElementById('countrySelect');
+    const countryId   = select.value;
+    const countryName = select.options[select.selectedIndex]?.dataset.name || '';
+
+    if (!countryId) {
+        alert('Please select a country first.');
+        return;
+    }
+
+    window.open(
+        `imagery-page.html?country_id=${countryId}&country=${encodeURIComponent(countryName)}`,
+        '_blank'
+    );
+}

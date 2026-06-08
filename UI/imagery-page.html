@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Satellite Imagery Portal</title>
+
   <link rel="stylesheet" href="imagery-page.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
   <!-- NAVBAR -->
@@ -15,7 +18,7 @@
     <div class="logo">A PROJECT BY <span>'WAN'</span></div>
     <div class="nav-links">
       <a href="home.html">Home</a>
-      <a href="search-country.html">Search Country</a>
+      <a href="search-country.html">Explore Data</a>
       <a href="form.html">Login</a>
     </div>
   </nav>
@@ -25,28 +28,14 @@
 
     <!-- HEADER -->
     <div class="page-header">
-      <h1>Satellite <span>Imagery</span> Portal</h1>
-      <p>Select a country to explore satellite imagery data</p>
+      <h1 id="pageTitle">🛰️ Satellite Imagery</h1>
+      <p id="pageSubtitle">Loading...</p>
+      <a href="search-country.html" class="back-btn">← Back to Globe</a>
     </div>
 
-    <!-- SEARCH BAR -->
-    <div class="search-bar">
-
-  <select id="terrainSelect" onchange="filterByTerrain()">
-    <option value="">All Terrains</option>
-    <option value="Urban">Urban</option>
-    <option value="Desert">Desert</option>
-    <option value="Forest">Forest</option>
-    <option value="Mountain">Mountain</option>
-    <option value="Coastal">Coastal</option>
-    <option value="Agricultural">Agricultural</option>
-    <option value="Wetland">Wetland</option>
-  </select>
-
-</div>
-    <!-- TERRAIN FILTER PILLS -->
+    <!-- TERRAIN FILTERS -->
     <div class="terrain-filters">
-      <div class="pill active" onclick="setPill(this, '')">All</div>
+      <div class="pill active" onclick="setPill(this, '')">🌍 All</div>
       <div class="pill" onclick="setPill(this, 'Urban')">🏙️ Urban</div>
       <div class="pill" onclick="setPill(this, 'Desert')">🏜️ Desert</div>
       <div class="pill" onclick="setPill(this, 'Forest')">🌲 Forest</div>
@@ -56,418 +45,166 @@
       <div class="pill" onclick="setPill(this, 'Wetland')">🌿 Wetland</div>
     </div>
 
-    <!-- STATS BAR -->
+    <!-- STATS -->
     <div class="stats-bar" id="statsBar" style="display:none;">
-      Showing <span id="imageCount">0</span> images
-      for <span id="countryLabel">—</span>
+      Showing <span id="imageCount">0</span> images for
+      <span id="countryLabel">—</span>
     </div>
 
     <!-- IMAGE GRID -->
     <div id="imageGrid">
       <div class="state-box">
-        <div class="icon">🛰️</div>
-        <p>Select a country above to explore satellite imagery</p>
+        <div class="icon">⏳</div>
+        <p>Loading images...</p>
       </div>
     </div>
 
     <footer>AI-02 Database Project — WAN Satellite Imagery System</footer>
+
   </div>
 
-  <!-- LIGHTBOX OVERLAY -->
+  <!-- LIGHTBOX -->
   <div id="lightbox" onclick="closeLightbox()">
     <div class="lb-content" onclick="event.stopPropagation()">
 
-      <!-- Control buttons -->
-      <button class="lb-close"    onclick="closeLightbox()">✕</button>
-      <button class="lb-zoom-in"  onclick="zoomIn()">＋</button>
+      <button class="lb-close" onclick="closeLightbox()">✕</button>
+      <button class="lb-zoom-in" onclick="zoomIn()">＋</button>
       <button class="lb-zoom-out" onclick="zoomOut()">－</button>
-      <button class="lb-reset"    onclick="resetZoom()">↺</button>
+      <button class="lb-reset" onclick="resetZoom()">↺</button>
 
-      <!-- Image -->
       <div class="lb-image-wrap" id="lbWrap">
         <img id="lbImg" src="" alt="">
       </div>
 
-      <!-- Full Info Panel -->
       <div class="lb-info">
-
         <div class="lb-location" id="lbLocation"></div>
-
         <div class="lb-description" id="lbDescription"></div>
 
         <div class="lb-meta-grid">
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">🛰️ Satellite</span>
-            <span class="lb-meta-value" id="lbSatName"></span>
-          </div>
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">🔧 Model</span>
-            <span class="lb-meta-value" id="lbModel"></span>
-          </div>
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">🌐 Orbit</span>
-            <span class="lb-meta-value" id="lbOrbit"></span>
-          </div>
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">📅 Captured</span>
-            <span class="lb-meta-value" id="lbYear"></span>
-          </div>
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">🌍 Country</span>
-            <span class="lb-meta-value" id="lbCountry"></span>
-          </div>
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">🏔️ Terrain</span>
-            <span class="lb-meta-value" id="lbTerrain"></span>
-          </div>
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">📍 Latitude</span>
-            <span class="lb-meta-value" id="lbLat"></span>
-          </div>
-          <div class="lb-meta-item">
-            <span class="lb-meta-label">📍 Longitude</span>
-            <span class="lb-meta-value" id="lbLng"></span>
-          </div>
+          <div class="lb-meta-item"><span>🛰️ Satellite</span><span id="lbSatName"></span></div>
+          <div class="lb-meta-item"><span>🔧 Model</span><span id="lbModel"></span></div>
+          <div class="lb-meta-item"><span>🌐 Orbit</span><span id="lbOrbit"></span></div>
+          <div class="lb-meta-item"><span>📅 Captured</span><span id="lbYear"></span></div>
+          <div class="lb-meta-item"><span>🌍 Country</span><span id="lbCountry"></span></div>
+          <div class="lb-meta-item"><span>🏔️ Terrain</span><span id="lbTerrain"></span></div>
+          <div class="lb-meta-item"><span>📍 Latitude</span><span id="lbLat"></span></div>
+          <div class="lb-meta-item"><span>📍 Longitude</span><span id="lbLng"></span></div>
         </div>
-
       </div>
+
     </div>
   </div>
 
   <script>
+    const BASE = '../Php';
+    const params = new URLSearchParams(window.location.search);
+    const countryId = params.get('country_id');
+    const countryName = params.get('country') || 'Unknown';
 
-const BASE = '../Php';
+    let currentTerrain = '';
+    let currentScale = 1;
+    let allImages = [];
 
-const params = new URLSearchParams(window.location.search);
+    document.getElementById('pageTitle').textContent = `🛰️ ${countryName}`;
+    document.getElementById('pageSubtitle').textContent = `Satellite imagery for ${countryName}`;
 
-let currentCountryId = params.get('country_id');
-let currentTerrain = '';
-let currentScale = 1;
-let allImages = [];
-
-window.addEventListener('DOMContentLoaded', () => {
-
-    if (!currentCountryId) {
-
-        document.getElementById('imageGrid').innerHTML = `
-            <div class="state-box">
-                <div class="icon">⚠️</div>
-                <p>No country selected.</p>
-            </div>`;
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!countryId) {
+        document.getElementById('imageGrid').innerHTML =
+          `<div class="state-box"><div class="icon">⚠️</div><p>No country selected</p></div>`;
         return;
+      }
+      fetchImages('');
+    });
+
+    function setPill(el, terrain) {
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      currentTerrain = terrain;
+      fetchImages(terrain);
     }
 
-    loadImages();
-});
+    function fetchImages(terrain) {
+      document.getElementById('imageGrid').innerHTML = '<div class="spinner"></div>';
 
-function filterByTerrain() {
+      let url = `${BASE}/phpget_images.php?country_id=${countryId}`;
+      if (terrain) url += `&terrain=${encodeURIComponent(terrain)}`;
 
-    currentTerrain =
-    document.getElementById('terrainSelect').value;
-
-    loadImages();
-}
-
-function setPill(el, terrain) {
-
-    document
-        .querySelectorAll('.pill')
-        .forEach(p => p.classList.remove('active'));
-
-    el.classList.add('active');
-
-    currentTerrain = terrain;
-
-    document.getElementById('terrainSelect').value =
-    terrain;
-
-    loadImages();
-}
-
-function loadImages() {
-
-    document.getElementById('imageGrid').innerHTML =
-    '<div class="spinner"></div>';
-
-    document.getElementById('statsBar').style.display =
-    'none';
-
-    let url =
-    `${BASE}/phpget_images.php?country_id=${currentCountryId}`;
-
-    if (currentTerrain) {
-
-        url +=
-        `&terrain=${encodeURIComponent(currentTerrain)}`;
-    }
-
-    fetch(url)
-        .then(response => response.json())
-        .then(images => renderImages(images))
-        .catch(error => {
-
-            console.error(error);
-
-            document.getElementById('imageGrid').innerHTML = `
-                <div class="state-box">
-                    <div class="icon">⚠️</div>
-                    <p>Failed to load images.</p>
-                </div>`;
+      fetch(url)
+        .then(r => r.json())
+        .then(images => {
+          allImages = images;
+          renderImages(images);
+        })
+        .catch(() => {
+          document.getElementById('imageGrid').innerHTML =
+            `<div class="state-box"><div class="icon">⚠️</div><p>Failed to load images</p></div>`;
         });
-}
-
-function renderImages(images) {
-
-    allImages = images;
-
-    const grid =
-    document.getElementById('imageGrid');
-
-    const statsBar =
-    document.getElementById('statsBar');
-
-    const imageCount =
-    document.getElementById('imageCount');
-
-    const countryLabel =
-    document.getElementById('countryLabel');
-
-    if (!images.length) {
-
-        grid.innerHTML = `
-            <div class="state-box">
-                <div class="icon">🔍</div>
-                <p>No images found.</p>
-            </div>`;
-
-        statsBar.style.display = 'none';
-
-        return;
     }
 
-    imageCount.textContent =
-    images.length;
+    function renderImages(images) {
+      const grid = document.getElementById('imageGrid');
 
-    countryLabel.textContent =
-    currentTerrain
-    ? `${images[0].Country_Name} → ${currentTerrain}`
-    : images[0].Country_Name;
+      if (!images.length) {
+        grid.innerHTML =
+          `<div class="state-box"><div class="icon">🔍</div><p>No images found</p></div>`;
+        return;
+      }
 
-    statsBar.style.display = 'block';
-
-    grid.innerHTML = images.map((img, index) => {
-
-        const terrain =
-        img.Terrain_Type || '';
-
-        const badgeClass =
-        `badge-${terrain.replace(/\s+/g,'')}`;
-
-        const imgPath =
-        `../Images/${img.Image_Path.replace('Images/','')}`;
+      grid.innerHTML = images.map((img, i) => {
+        const imgPath = `../Images/${img.Image_Path.replace('Images/', '')}`;
 
         return `
-        <div class="card">
-
-            <img
-                class="card-image"
-                src="${imgPath}"
-                alt="${img.Loc_Name}"
-                onclick="openLightbox(${index}, '${imgPath}')"
-                onerror="
-                    this.style.display='none';
-                    this.nextElementSibling.style.display='flex';
-                "
-            >
-
-            <div class="card-image-placeholder"
-                 style="display:none;">
-
-                 <span class="icon">
-                    ${terrainIcon(terrain)}
-                 </span>
-
-                 <span>
-                    ${terrain}
-                 </span>
-
-            </div>
-
+          <div class="card">
+            <img class="card-image"
+              src="${imgPath}"
+              onclick="openLightbox(${i}, '${imgPath}')">
             <div class="card-body">
-
-                <span class="terrain-badge ${badgeClass}">
-                    ${terrain}
-                </span>
-
-                <div class="card-title">
-                    ${img.Loc_Name}
-                </div>
-
-                <div class="card-desc">
-                    ${img.Description || 'No description available.'}
-                </div>
-
-                <div class="card-meta">
-
-                    <span>
-                        🛰️ ${img.Sat_Name}
-                    </span>
-
-                    <span>
-                        📅 ${img.Capture_Year}
-                    </span>
-
-                    <span>
-                        🌍 ${img.Country_Name}
-                    </span>
-
-                    <span>
-                        🔭 ${img.Orbit}
-                    </span>
-
-                </div>
-
+              <div class="card-title">${img.Loc_Name}</div>
+              <div class="card-desc">${img.Description || ''}</div>
             </div>
-
-        </div>
+          </div>
         `;
+      }).join('');
+    }
 
-    }).join('');
-}
+    function openLightbox(index, imgPath) {
+      const img = allImages[index];
 
-function terrainIcon(terrain) {
+      document.getElementById('lbImg').src = imgPath;
+      document.getElementById('lbLocation').textContent = img.Loc_Name;
+      document.getElementById('lbDescription').textContent = img.Description || '';
+      document.getElementById('lbSatName').textContent = img.Sat_Name || '';
+      document.getElementById('lbModel').textContent = img.Model || '';
+      document.getElementById('lbOrbit').textContent = img.Orbit || '';
+      document.getElementById('lbYear').textContent = img.Capture_Year || '';
+      document.getElementById('lbCountry').textContent = img.Country_Name || '';
+      document.getElementById('lbTerrain').textContent = img.Terrain_Type || '';
+      document.getElementById('lbLat').textContent = img.Latitude || '';
+      document.getElementById('lbLng').textContent = img.Longitude || '';
 
-    const icons = {
-        Urban:'🏙️',
-        Desert:'🏜️',
-        Forest:'🌲',
-        Mountain:'⛰️',
-        Coastal:'🌊',
-        Agricultural:'🌾',
-        Wetland:'🌿'
-    };
+      document.getElementById('lightbox').classList.add('open');
+    }
 
-    return icons[terrain] || '🛰️';
-}
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
 
-function openLightbox(index, imgPath) {
+    function zoomIn() {
+      currentScale += 0.2;
+      document.getElementById('lbImg').style.transform = `scale(${currentScale})`;
+    }
 
-    const img =
-    allImages[index];
+    function zoomOut() {
+      currentScale = Math.max(0.5, currentScale - 0.2);
+      document.getElementById('lbImg').style.transform = `scale(${currentScale})`;
+    }
 
-    currentScale = 1;
+    function resetZoom() {
+      currentScale = 1;
+      document.getElementById('lbImg').style.transform = 'scale(1)';
+    }
+  </script>
 
-    document.getElementById('lbImg').src =
-    imgPath;
-
-    document.getElementById('lbImg').style.transform =
-    'scale(1)';
-
-    document.getElementById('lbLocation').textContent =
-    img.Loc_Name || '';
-
-    document.getElementById('lbDescription').textContent =
-    img.Description || '';
-
-    document.getElementById('lbSatName').textContent =
-    img.Sat_Name || '—';
-
-    document.getElementById('lbModel').textContent =
-    img.Model || '—';
-
-    document.getElementById('lbOrbit').textContent =
-    img.Orbit || '—';
-
-    document.getElementById('lbYear').textContent =
-    img.Capture_Year || '—';
-
-    document.getElementById('lbCountry').textContent =
-    img.Country_Name || '—';
-
-    document.getElementById('lbTerrain').textContent =
-    img.Terrain_Type || '—';
-
-    document.getElementById('lbLat').textContent =
-    img.Latitude || '—';
-
-    document.getElementById('lbLng').textContent =
-    img.Longitude || '—';
-
-    document
-        .getElementById('lightbox')
-        .classList.add('open');
-
-    document.body.style.overflow =
-    'hidden';
-}
-
-function closeLightbox() {
-
-    document
-        .getElementById('lightbox')
-        .classList.remove('open');
-
-    document.body.style.overflow = '';
-
-    resetZoom();
-}
-
-function zoomIn() {
-
-    currentScale =
-    Math.min(currentScale + 0.3, 4);
-
-    document.getElementById('lbImg')
-        .style.transform =
-    `scale(${currentScale})`;
-}
-
-function zoomOut() {
-
-    currentScale =
-    Math.max(currentScale - 0.3, 0.5);
-
-    document.getElementById('lbImg')
-        .style.transform =
-    `scale(${currentScale})`;
-}
-
-function resetZoom() {
-
-    currentScale = 1;
-
-    document.getElementById('lbImg')
-        .style.transform =
-    'scale(1)';
-}
-
-document.addEventListener('keydown', e => {
-
-    if (e.key === 'Escape')
-        closeLightbox();
-
-    if (e.key === '+')
-        zoomIn();
-
-    if (e.key === '-')
-        zoomOut();
-
-    if (e.key === '0')
-        resetZoom();
-});
-
-document
-.getElementById('lbWrap')
-.addEventListener('wheel', e => {
-
-    e.preventDefault();
-
-    e.deltaY < 0
-        ? zoomIn()
-        : zoomOut();
-
-}, { passive:false });
-
-</script>
 </body>
 </html>
