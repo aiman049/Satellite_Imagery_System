@@ -96,115 +96,252 @@
   </div>
 
   <script>
-    const BASE = '../Php';
-    const params = new URLSearchParams(window.location.search);
-    const countryId = params.get('country_id');
-    const countryName = params.get('country') || 'Unknown';
+const BASE = '../Php';
 
-    let currentTerrain = '';
-    let currentScale = 1;
-    let allImages = [];
+const params = new URLSearchParams(window.location.search);
 
-    document.getElementById('pageTitle').textContent = `🛰️ ${countryName}`;
-    document.getElementById('pageSubtitle').textContent = `Satellite imagery for ${countryName}`;
+const countryId = params.get('country_id');
+const countryName = params.get('country') || 'Unknown';
 
-    window.addEventListener('DOMContentLoaded', () => {
-      if (!countryId) {
-        document.getElementById('imageGrid').innerHTML =
-          `<div class="state-box"><div class="icon">⚠️</div><p>No country selected</p></div>`;
+let currentTerrain = '';
+let currentScale = 1;
+let allImages = [];
+
+window.addEventListener('DOMContentLoaded', () => {
+
+    document.getElementById('pageTitle').textContent =
+        `🛰️ ${countryName}`;
+
+    document.getElementById('pageSubtitle').textContent =
+        `Satellite imagery for ${countryName}`;
+
+    if (!countryId) {
+
+        document.getElementById('imageGrid').innerHTML = `
+            <div class="state-box">
+                <div class="icon">⚠️</div>
+                <p>No country selected.</p>
+            </div>
+        `;
+
         return;
-      }
-      fetchImages('');
-    });
-
-    function setPill(el, terrain) {
-      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-      el.classList.add('active');
-      currentTerrain = terrain;
-      fetchImages(terrain);
     }
 
-    function fetchImages(terrain) {
-      document.getElementById('imageGrid').innerHTML = '<div class="spinner"></div>';
+    fetchImages('');
+});
 
-      let url = `${BASE}/phpget_images.php?country_id=${countryId}`;
-      if (terrain) url += `&terrain=${encodeURIComponent(terrain)}`;
 
-      fetch(url)
-        .then(r => r.json())
+function setPill(el, terrain) {
+
+    document
+        .querySelectorAll('.pill')
+        .forEach(p => p.classList.remove('active'));
+
+    el.classList.add('active');
+
+    currentTerrain = terrain;
+
+    fetchImages(terrain);
+}
+
+
+function fetchImages(terrain) {
+
+    document.getElementById('imageGrid').innerHTML =
+        '<div class="spinner"></div>';
+
+    let url =
+        `${BASE}/phpget_images.php?country_id=${countryId}`;
+
+    if (terrain) {
+        url += `&terrain=${encodeURIComponent(terrain)}`;
+    }
+
+    fetch(url)
+
+        .then(response => response.json())
+
         .then(images => {
-          allImages = images;
-          renderImages(images);
+
+            console.log("Images Received:", images);
+
+            allImages = images;
+
+            renderImages(images);
         })
-        .catch(() => {
-          document.getElementById('imageGrid').innerHTML =
-            `<div class="state-box"><div class="icon">⚠️</div><p>Failed to load images</p></div>`;
+
+        .catch(error => {
+
+            console.error(error);
+
+            document.getElementById('imageGrid').innerHTML = `
+                <div class="state-box">
+                    <div class="icon">⚠️</div>
+                    <p>Failed to load images.</p>
+                </div>
+            `;
         });
+}
+
+
+function renderImages(images) {
+
+    const grid = document.getElementById('imageGrid');
+
+    const stats = document.getElementById('statsBar');
+
+    if (!images.length) {
+
+        grid.innerHTML = `
+            <div class="state-box">
+                <div class="icon">🔍</div>
+                <p>No images found for this country.</p>
+            </div>
+        `;
+
+        stats.style.display = 'none';
+
+        return;
     }
 
-    function renderImages(images) {
-      const grid = document.getElementById('imageGrid');
+    document.getElementById('imageCount').textContent =
+        images.length;
 
-      if (!images.length) {
-        grid.innerHTML =
-          `<div class="state-box"><div class="icon">🔍</div><p>No images found</p></div>`;
-        return;
-      }
+    document.getElementById('countryLabel').textContent =
+        currentTerrain
+            ? `${countryName} → ${currentTerrain}`
+            : countryName;
 
-      grid.innerHTML = images.map((img, i) => {
-        const imgPath = `../Images/${img.Image_Path.replace('Images/', '')}`;
+    stats.style.display = 'block';
+
+    grid.innerHTML = images.map((img, index) => {
+
+        const imgPath = "../" + img.Image_Path;
 
         return `
-          <div class="card">
-            <img class="card-image"
-              src="${imgPath}"
-              onclick="openLightbox(${i}, '${imgPath}')">
-            <div class="card-body">
-              <div class="card-title">${img.Loc_Name}</div>
-              <div class="card-desc">${img.Description || ''}</div>
+            <div class="card">
+
+                <img
+                    class="card-image"
+                    src="${imgPath}"
+                    alt="${img.Loc_Name}"
+                    onclick="openLightbox(${index}, '${imgPath}')"
+                    onerror="this.style.display='none';"
+                >
+
+                <div class="card-body">
+
+                    <div class="card-title">
+                        ${img.Loc_Name}
+                    </div>
+
+                    <div class="card-desc">
+                        ${img.Description || ''}
+                    </div>
+
+                </div>
+
             </div>
-          </div>
         `;
-      }).join('');
+    }).join('');
+}
+
+
+function openLightbox(index, imgPath) {
+
+    const img = allImages[index];
+
+    currentScale = 1;
+
+    document.getElementById('lbImg').src =
+        imgPath;
+
+    document.getElementById('lbImg').style.transform =
+        'scale(1)';
+
+    document.getElementById('lbLocation').textContent =
+        img.Loc_Name || '';
+
+    document.getElementById('lbDescription').textContent =
+        img.Description || '';
+
+    document.getElementById('lbSatName').textContent =
+        img.Sat_Name || '';
+
+    document.getElementById('lbModel').textContent =
+        img.Model || '';
+
+    document.getElementById('lbOrbit').textContent =
+        img.Orbit || '';
+
+    document.getElementById('lbYear').textContent =
+        img.Capture_Year || '';
+
+    document.getElementById('lbCountry').textContent =
+        img.Country_Name || '';
+
+    document.getElementById('lbTerrain').textContent =
+        img.Terrain_Type || '';
+
+    document.getElementById('lbLat').textContent =
+        img.Latitude || '';
+
+    document.getElementById('lbLng').textContent =
+        img.Longitude || '';
+
+    document.getElementById('lightbox')
+        .classList.add('open');
+}
+
+
+function closeLightbox() {
+
+    document.getElementById('lightbox')
+        .classList.remove('open');
+
+    resetZoom();
+}
+
+
+function zoomIn() {
+
+    currentScale += 0.2;
+
+    document.getElementById('lbImg')
+        .style.transform =
+        `scale(${currentScale})`;
+}
+
+
+function zoomOut() {
+
+    currentScale = Math.max(
+        0.5,
+        currentScale - 0.2
+    );
+
+    document.getElementById('lbImg')
+        .style.transform =
+        `scale(${currentScale})`;
+}
+
+
+function resetZoom() {
+
+    currentScale = 1;
+
+    document.getElementById('lbImg')
+        .style.transform =
+        'scale(1)';
+}
+
+
+document.addEventListener('keydown', e => {
+
+    if (e.key === 'Escape') {
+        closeLightbox();
     }
-
-    function openLightbox(index, imgPath) {
-      const img = allImages[index];
-
-      document.getElementById('lbImg').src = imgPath;
-      document.getElementById('lbLocation').textContent = img.Loc_Name;
-      document.getElementById('lbDescription').textContent = img.Description || '';
-      document.getElementById('lbSatName').textContent = img.Sat_Name || '';
-      document.getElementById('lbModel').textContent = img.Model || '';
-      document.getElementById('lbOrbit').textContent = img.Orbit || '';
-      document.getElementById('lbYear').textContent = img.Capture_Year || '';
-      document.getElementById('lbCountry').textContent = img.Country_Name || '';
-      document.getElementById('lbTerrain').textContent = img.Terrain_Type || '';
-      document.getElementById('lbLat').textContent = img.Latitude || '';
-      document.getElementById('lbLng').textContent = img.Longitude || '';
-
-      document.getElementById('lightbox').classList.add('open');
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('open');
-    }
-
-    function zoomIn() {
-      currentScale += 0.2;
-      document.getElementById('lbImg').style.transform = `scale(${currentScale})`;
-    }
-
-    function zoomOut() {
-      currentScale = Math.max(0.5, currentScale - 0.2);
-      document.getElementById('lbImg').style.transform = `scale(${currentScale})`;
-    }
-
-    function resetZoom() {
-      currentScale = 1;
-      document.getElementById('lbImg').style.transform = 'scale(1)';
-    }
-  </script>
-
+});
+</script>
 </body>
 </html>
