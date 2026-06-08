@@ -4,12 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Geo-Satellite Imagery Portal</title>
+
   <script src="https://unpkg.com/three"></script>
   <script src="https://unpkg.com/globe.gl"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="search-country.css">
 </head>
+
 <body>
 
   <!-- NAVBAR -->
@@ -23,7 +27,7 @@
     </div>
   </nav>
 
-  <!-- MAIN LAYOUT -->
+  <!-- MAIN -->
   <div class="container">
 
     <!-- LEFT PANEL -->
@@ -34,12 +38,29 @@
         <p>Explore Earth Satellite Imagery Data for observation.</p>
       </header>
 
+      <!-- SEARCH -->
       <div class="search-controls">
-        <label for="countrySelect" class="visually-hidden">Select a Country</label>
+        <label for="countrySelect" class="visually-hidden">Select Country</label>
+
         <select id="countrySelect" class="input-box">
           <option value="">Select Country...</option>
+
+          <option value="Pakistan">Pakistan</option>
+          <option value="Turkey">Turkey</option>
+          <option value="USA">USA</option>
+          <option value="Japan">Japan</option>
+          <option value="China">China</option>
+          <option value="Brazil">Brazil</option>
+          <option value="Australia">Australia</option>
+          <option value="India">India</option>
+          <option value="UK">United Kingdom</option>
+          <option value="Germany">Germany</option>
+          <option value="France">France</option>
+          <option value="Saudi Arabia">Saudi Arabia</option>
+          <option value="UAE">UAE</option>
         </select>
-        <button class="btn btn-primary" onclick="openGallery()">
+
+        <button class="btn-search" onclick="openGallery()">
           Search Region
         </button>
       </div>
@@ -50,13 +71,30 @@
 
     </main>
 
-    <!-- RIGHT PANEL — GLOBE -->
+    <!-- RIGHT PANEL -->
     <div class="right-panel">
       <div id="globeViz"></div>
     </div>
 
   </div>
 
+  <script>
+    function openGallery() {
+      const country = document.getElementById('countrySelect').value;
+
+      if (!country) {
+        alert("Please select a country first!");
+        return;
+      }
+
+      window.open(
+        `imagery-page.html?country=${encodeURIComponent(country)}`,
+        "_blank"
+      );
+    }
+  </script>
+
   <script src="script.js"></script>
+
 </body>
 </html>
