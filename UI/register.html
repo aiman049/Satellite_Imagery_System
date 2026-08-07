@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — WAN Satellite</title>
+  <link rel="stylesheet" href="register.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">A PROJECT BY <span>'WAN'</span></div>
+    <a href="home.html" class="nav-back">← Back to Home</a>
+  </header>
+
+  <section class="form-hero">
+    <div class="form-card">
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button class="tab active" id="tabRegister" onclick="showTab('register')">Register</button>
+        <button class="tab" id="tabLogin" onclick="showTab('login')">Login</button>
+      </div>
+
+      <!-- REGISTER PANEL -->
+      <div id="registerPanel">
+        <div class="form-header">
+          <div class="form-icon">🛰️</div>
+          <h1>Create Account</h1>
+          <p>Register to access satellite imagery data</p>
+        </div>
+
+        <div class="form-msg" id="regMsg"></div>
+
+        <form id="registerForm" novalidate>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" id="firstName" placeholder="e.g. Aiman" required>
+            </div>
+            <div class="field-group">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" id="lastName" placeholder="e.g. Atif" required>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Username <span class="req">*</span></label>
+            <input type="text" id="userName" placeholder="e.g. aiman_sat" required>
+          </div>
+
+          <div class="field-group">
+            <label>Father's Name <span class="req">*</span></label>
+            <input type="text" id="fatherName" placeholder="Father's full name" required>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Date of Birth <span class="req">*</span></label>
+              <input type="date" id="dob" required>
+            </div>
+            <div class="field-group">
+              <label>Gender</label>
+              <select id="gender">
+                <option value="" disabled selected>Select</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>CNIC</label>
+              <input type="text" id="cnic" placeholder="12345-1234567-1" maxlength="15">
+            </div>
+            <div class="field-group">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" id="phone" placeholder="+92 300 0000000" required>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="you@example.com" required>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Country <span class="req">*</span></label>
+              <input type="text" id="country" placeholder="e.g. Pakistan" required>
+            </div>
+            <div class="field-group">
+              <label>Full Address</label>
+              <input type="text" id="address" placeholder="Street, City">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Password <span class="req">*</span></label>
+              <div class="pw-wrap">
+                <input type="password" id="password" placeholder="Min 8 characters" required>
+                <button type="button" class="eye-btn" onclick="togglePw('password',this)">👁</button>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Confirm Password <span class="req">*</span></label>
+              <div class="pw-wrap">
+                <input type="password" id="confirmPassword" placeholder="Repeat password" required>
+                <button type="button" class="eye-btn" onclick="togglePw('confirmPassword',this)">👁</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="regBtn">
+            <span id="regBtnText">Create Account</span>
+            <span id="regBtnLoader" style="display:none">⏳ Registering...</span>
+          </button>
+
+        </form>
+
+        <p class="switch-text">Already have an account? <a href="#" onclick="showTab('login')">Login here</a></p>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div id="loginPanel" style="display:none;">
+        <div class="form-header">
+          <div class="form-icon">🔐</div>
+          <h1>Welcome Back</h1>
+          <p>Login to access satellite imagery data</p>
+        </div>
+
+        <div class="form-msg" id="loginMsg"></div>
+
+        <form id="loginForm" novalidate>
+
+          <div class="field-group">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="loginEmail" placeholder="you@example.com" required>
+          </div>
+
+          <div class="field-group">
+            <label>Password <span class="req">*</span></label>
+            <div class="pw-wrap">
+              <input type="password" id="loginPassword" placeholder="Your password" required>
+              <button type="button" class="eye-btn" onclick="togglePw('loginPassword',this)">👁</button>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="loginBtn">
+            <span id="loginBtnText">Login</span>
+            <span id="loginBtnLoader" style="display:none">⏳ Logging in...</span>
+          </button>
+
+        </form>
+
+        <p class="switch-text">Don't have an account? <a href="#" onclick="showTab('register')">Register here</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+  const BASE = '../Php';
+
+  // ── TAB SWITCHER ──────────────────────────────────────────
+  function showTab(tab) {
+    document.getElementById('registerPanel').style.display = tab === 'register' ? 'block' : 'none';
+    document.getElementById('loginPanel').style.display    = tab === 'login'    ? 'block' : 'none';
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('tabLogin').classList.toggle('active',    tab === 'login');
+  }
+
+  // ── SHOW/HIDE PASSWORD ────────────────────────────────────
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+  }
+
+  // ── MESSAGE HELPER ────────────────────────────────────────
+  function showMsg(elId, text, type) {
+    const el = document.getElementById(elId);
+    el.textContent = text;
+    el.className = 'form-msg ' + type;
+  }
+
+  // ── REGISTER ──────────────────────────────────────────────
+  document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const password        = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password.length < 8) {
+      showMsg('regMsg', '❌ Password must be at least 8 characters.', 'error'); return;
+    }
+    if (password !== confirmPassword) {
+      showMsg('regMsg', '❌ Passwords do not match.', 'error'); return;
+    }
+
+    const body = {
+      firstName:  document.getElementById('firstName').value.trim(),
+      lastName:   document.getElementById('lastName').value.trim(),
+      userName:   document.getElementById('userName').value.trim(),
+      fatherName: document.getElementById('fatherName').value.trim(),
+      dob:        document.getElementById('dob').value,
+      gender:     document.getElementById('gender').value,
+      cnic:       document.getElementById('cnic').value.trim(),
+      phone:      document.getElementById('phone').value.trim(),
+      email:      document.getElementById('email').value.trim(),
+      country:    document.getElementById('country').value.trim(),
+      address:    document.getElementById('address').value.trim(),
+      password,   confirmPassword
+    };
+
+    document.getElementById('regBtnText').style.display   = 'none';
+    document.getElementById('regBtnLoader').style.display = 'inline';
+    document.getElementById('regBtn').disabled = true;
+
+    try {
+      const res  = await fetch(`${BASE}/phpregister.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showMsg('regMsg', '✅ Account created! Switching to login...', 'success');
+        setTimeout(() => { showTab('login'); document.getElementById('regMsg').className = 'form-msg'; }, 1800);
+      } else {
+        showMsg('regMsg', '❌ ' + (data.message || 'Registration failed.'), 'error');
+      }
+    } catch {
+      showMsg('regMsg', '❌ Cannot reach server. Is XAMPP running?', 'error');
+    }
+
+    document.getElementById('regBtnText').style.display   = 'inline';
+    document.getElementById('regBtnLoader').style.display = 'none';
+    document.getElementById('regBtn').disabled = false;
+  });
+
+  // ── LOGIN ─────────────────────────────────────────────────
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const body = {
+      email:    document.getElementById('loginEmail').value.trim(),
+      password: document.getElementById('loginPassword').value
+    };
+
+    document.getElementById('loginBtnText').style.display   = 'none';
+    document.getElementById('loginBtnLoader').style.display = 'inline';
+    document.getElementById('loginBtn').disabled = true;
+
+    try {
+      const res  = await fetch(`${BASE}/phplogin.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('wan_logged_in', 'true');
+        localStorage.setItem('wan_user', JSON.stringify(data.user));
+        showMsg('loginMsg', '✅ Login successful! Redirecting...', 'success');
+        setTimeout(() => window.location.href = 'search-country.html', 1200);
+      } else {
+        showMsg('loginMsg', '❌ ' + (data.message || 'Invalid credentials.'), 'error');
+      }
+    } catch {
+      showMsg('loginMsg', '❌ Cannot reach server. Is XAMPP running?', 'error');
+    }
+
+    document.getElementById('loginBtnText').style.display   = 'inline';
+    document.getElementById('loginBtnLoader').style.display = 'none';
+    document.getElementById('loginBtn').disabled = false;
+  });
+  </script>
+
+</body>
+</html>
