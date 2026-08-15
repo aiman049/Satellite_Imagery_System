@@ -1,3 +1,8 @@
+-- ============================================================
+-- WAN Satellite Imagery System
+-- Run this in phpMyAdmin on your SatelliteIDB database
+-- This creates the User_Profile table for registration/login
+-- ============================================================
 
 USE SatelliteIDB;
 
@@ -18,3 +23,8 @@ CREATE TABLE IF NOT EXISTS User_Profile (
     Created_At    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ============================================================
+-- NOTE: Your original Create_Tables.sql uses SQL Server syntax
+-- (IDENTITY, NVARCHAR). The table above uses MySQL syntax
+-- so it works with XAMPP + phpMyAdmin.
+-- ============================================================

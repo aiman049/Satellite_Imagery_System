@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register — WAN Satellite</title>
   <link rel="stylesheet" href="register.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
 
   <!-- Navbar -->
   <header class="navbar">
     <div class="logo">A PROJECT BY <span>'WAN'</span></div>
-    <a href="home.html" class="nav-back">← Back to Home</a>
+    <a href="../index.html" class="nav-back">← Back to Home</a>
   </header>
 
   <section class="form-hero">
@@ -40,22 +44,22 @@
           <div class="field-row">
             <div class="field-group">
               <label>First Name <span class="req">*</span></label>
-              <input type="text" id="firstName" placeholder="e.g. Aiman" required>
+              <input type="text" id="firstName" placeholder="Enter Your First Name" required>
             </div>
             <div class="field-group">
               <label>Last Name <span class="req">*</span></label>
-              <input type="text" id="lastName" placeholder="e.g. Atif" required>
+              <input type="text" id="lastName" placeholder="Enter Your Last Name" required>
             </div>
           </div>
 
           <div class="field-group">
             <label>Username <span class="req">*</span></label>
-            <input type="text" id="userName" placeholder="e.g. aiman_sat" required>
+            <input type="text" id="userName" placeholder="Enter Your Username" required>
           </div>
 
           <div class="field-group">
             <label>Father's Name <span class="req">*</span></label>
-            <input type="text" id="fatherName" placeholder="Father's full name" required>
+            <input type="text" id="fatherName" placeholder="Enter Your Father's Name" required>
           </div>
 
           <div class="field-row">
@@ -76,11 +80,11 @@
           <div class="field-row">
             <div class="field-group">
               <label>CNIC</label>
-              <input type="text" id="cnic" placeholder="12345-1234567-1" maxlength="15">
+              <input type="text" id="cnic" placeholder="Enter Your CNIC" required>
             </div>
             <div class="field-group">
               <label>Phone Number <span class="req">*</span></label>
-              <input type="tel" id="phone" placeholder="+92 300 0000000" required>
+              <input type="tel" id="phone" placeholder="Enter Your Phone Number" required>
             </div>
           </div>
 
@@ -92,11 +96,11 @@
           <div class="field-row">
             <div class="field-group">
               <label>Country <span class="req">*</span></label>
-              <input type="text" id="country" placeholder="e.g. Pakistan" required>
+              <input type="text" id="country" placeholder="Enter Your Country" required>
             </div>
             <div class="field-group">
               <label>Full Address</label>
-              <input type="text" id="address" placeholder="Street, City">
+              <input type="text" id="address" placeholder="Enter Your Address">
             </div>
           </div>
 
@@ -166,122 +170,123 @@
   </section>
 
   <script>
-  const BASE = '../Php';
+    const BASE = '../Php';
 
-  // ── TAB SWITCHER ──────────────────────────────────────────
-  function showTab(tab) {
-    document.getElementById('registerPanel').style.display = tab === 'register' ? 'block' : 'none';
-    document.getElementById('loginPanel').style.display    = tab === 'login'    ? 'block' : 'none';
-    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-    document.getElementById('tabLogin').classList.toggle('active',    tab === 'login');
-  }
-
-  // ── SHOW/HIDE PASSWORD ────────────────────────────────────
-  function togglePw(id, btn) {
-    const inp = document.getElementById(id);
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-    btn.textContent = inp.type === 'password' ? '👁' : '🙈';
-  }
-
-  // ── MESSAGE HELPER ────────────────────────────────────────
-  function showMsg(elId, text, type) {
-    const el = document.getElementById(elId);
-    el.textContent = text;
-    el.className = 'form-msg ' + type;
-  }
-
-  // ── REGISTER ──────────────────────────────────────────────
-  document.getElementById('registerForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const password        = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-
-    if (password.length < 8) {
-      showMsg('regMsg', '❌ Password must be at least 8 characters.', 'error'); return;
-    }
-    if (password !== confirmPassword) {
-      showMsg('regMsg', '❌ Passwords do not match.', 'error'); return;
+    // ── TAB SWITCHER ──────────────────────────────────────────
+    function showTab(tab) {
+      document.getElementById('registerPanel').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('loginPanel').style.display = tab === 'login' ? 'block' : 'none';
+      document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
     }
 
-    const body = {
-      firstName:  document.getElementById('firstName').value.trim(),
-      lastName:   document.getElementById('lastName').value.trim(),
-      userName:   document.getElementById('userName').value.trim(),
-      fatherName: document.getElementById('fatherName').value.trim(),
-      dob:        document.getElementById('dob').value,
-      gender:     document.getElementById('gender').value,
-      cnic:       document.getElementById('cnic').value.trim(),
-      phone:      document.getElementById('phone').value.trim(),
-      email:      document.getElementById('email').value.trim(),
-      country:    document.getElementById('country').value.trim(),
-      address:    document.getElementById('address').value.trim(),
-      password,   confirmPassword
-    };
+    // ── SHOW/HIDE PASSWORD ────────────────────────────────────
+    function togglePw(id, btn) {
+      const inp = document.getElementById(id);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      btn.textContent = inp.type === 'password' ? '👁' : '👁‍🗨';
+    }
 
-    document.getElementById('regBtnText').style.display   = 'none';
-    document.getElementById('regBtnLoader').style.display = 'inline';
-    document.getElementById('regBtn').disabled = true;
+    // ── MESSAGE HELPER ────────────────────────────────────────
+    function showMsg(elId, text, type) {
+      const el = document.getElementById(elId);
+      el.textContent = text;
+      el.className = 'form-msg ' + type;
+    }
 
-    try {
-      const res  = await fetch(`${BASE}/phpregister.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const data = await res.json();
-      if (data.success) {
-        showMsg('regMsg', '✅ Account created! Switching to login...', 'success');
-        setTimeout(() => { showTab('login'); document.getElementById('regMsg').className = 'form-msg'; }, 1800);
-      } else {
-        showMsg('regMsg', '❌ ' + (data.message || 'Registration failed.'), 'error');
+    // ── REGISTER ──────────────────────────────────────────────
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password.length < 8) {
+        showMsg('regMsg', '❌ Password must be at least 8 characters.', 'error'); return;
       }
-    } catch {
-      showMsg('regMsg', '❌ Cannot reach server. Is XAMPP running?', 'error');
-    }
-
-    document.getElementById('regBtnText').style.display   = 'inline';
-    document.getElementById('regBtnLoader').style.display = 'none';
-    document.getElementById('regBtn').disabled = false;
-  });
-
-  // ── LOGIN ─────────────────────────────────────────────────
-  document.getElementById('loginForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const body = {
-      email:    document.getElementById('loginEmail').value.trim(),
-      password: document.getElementById('loginPassword').value
-    };
-
-    document.getElementById('loginBtnText').style.display   = 'none';
-    document.getElementById('loginBtnLoader').style.display = 'inline';
-    document.getElementById('loginBtn').disabled = true;
-
-    try {
-      const res  = await fetch(`${BASE}/phplogin.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const data = await res.json();
-      if (data.success) {
-        localStorage.setItem('wan_logged_in', 'true');
-        localStorage.setItem('wan_user', JSON.stringify(data.user));
-        showMsg('loginMsg', '✅ Login successful! Redirecting...', 'success');
-        setTimeout(() => window.location.href = 'search-country.html', 1200);
-      } else {
-        showMsg('loginMsg', '❌ ' + (data.message || 'Invalid credentials.'), 'error');
+      if (password !== confirmPassword) {
+        showMsg('regMsg', '❌ Passwords do not match.', 'error'); return;
       }
-    } catch {
-      showMsg('loginMsg', '❌ Cannot reach server. Is XAMPP running?', 'error');
-    }
 
-    document.getElementById('loginBtnText').style.display   = 'inline';
-    document.getElementById('loginBtnLoader').style.display = 'none';
-    document.getElementById('loginBtn').disabled = false;
-  });
+      const body = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        userName: document.getElementById('userName').value.trim(),
+        fatherName: document.getElementById('fatherName').value.trim(),
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        cnic: document.getElementById('cnic').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        country: document.getElementById('country').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        password, confirmPassword
+      };
+
+      document.getElementById('regBtnText').style.display = 'none';
+      document.getElementById('regBtnLoader').style.display = 'inline';
+      document.getElementById('regBtn').disabled = true;
+
+      try {
+        const res = await fetch(`${BASE}/phpregister.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showMsg('regMsg', '✅ Account created! Switching to login...', 'success');
+          setTimeout(() => { showTab('login'); document.getElementById('regMsg').className = 'form-msg'; }, 1800);
+        } else {
+          showMsg('regMsg', '❌ ' + (data.message || 'Registration failed.'), 'error');
+        }
+      } catch {
+        showMsg('regMsg', '❌ Cannot reach server. Is XAMPP running?', 'error');
+      }
+
+      document.getElementById('regBtnText').style.display = 'inline';
+      document.getElementById('regBtnLoader').style.display = 'none';
+      document.getElementById('regBtn').disabled = false;
+    });
+
+    // ── LOGIN ─────────────────────────────────────────────────
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const body = {
+        email: document.getElementById('loginEmail').value.trim(),
+        password: document.getElementById('loginPassword').value
+      };
+
+      document.getElementById('loginBtnText').style.display = 'none';
+      document.getElementById('loginBtnLoader').style.display = 'inline';
+      document.getElementById('loginBtn').disabled = true;
+
+      try {
+        const res = await fetch(`${BASE}/phplogin.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('wan_logged_in', 'true');
+          localStorage.setItem('wan_user', JSON.stringify(data.user));
+          showMsg('loginMsg', '✅ Login successful! Redirecting...', 'success');
+          setTimeout(() => window.location.href = 'search-country.html', 1200);
+        } else {
+          showMsg('loginMsg', '❌ ' + (data.message || 'Invalid credentials.'), 'error');
+        }
+      } catch {
+        showMsg('loginMsg', '❌ Cannot reach server. Is XAMPP running?', 'error');
+      }
+
+      document.getElementById('loginBtnText').style.display = 'inline';
+      document.getElementById('loginBtnLoader').style.display = 'none';
+      document.getElementById('loginBtn').disabled = false;
+    });
   </script>
 
 </body>
+
 </html>

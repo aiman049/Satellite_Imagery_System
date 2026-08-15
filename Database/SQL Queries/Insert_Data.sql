@@ -273,7 +273,6 @@ INSERT INTO Satellite_Image (Loc_ID, Sat_ID, Capture_Year, Image_Path, Descripti
  'Lake Van saline lake and shoreline wetlands - Landsat 8 alkaline water quality and flamingo habitat mapping.'),
 (46, 3, 2023, 'Images\Turkey\Wetland\shoreline wetlands.jpg',
  'Lake Van water level change 2021-2023 - Sentinel-2A NDWI lake surface area comparison showing 2m rise.');
-
 GO 
 -- ============================================================
 -- INSERT: USERS

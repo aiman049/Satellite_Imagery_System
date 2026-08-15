@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geo-Satellite Imagery Portal</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/three"></script>
     <script src="https://unpkg.com/globe.gl"></script>
-    
-    <link rel="stylesheet" href="explore_data.css">
     <link rel="stylesheet" href="search-country.css">
 </head>
+
 <body>
 
     <nav>
         <div class="nav-container">
             <div class="logo">A PROJECT BY <span>'WAN'</span></div>
             <div class="nav-links">
-                <a href="home.html">Home</a>
-                <a href="form.html">Login</a>
+                <a href="../index.html">Home</a>
+                <span id="navUser" class="nav-user-pill"></span>
+                <a href="#" onclick="logout()">Logout</a>
             </div>
         </div>
     </nav>
-
     <div class="container">
         <main class="left-panel">
             <header>
@@ -36,14 +36,6 @@
                 <label for="countrySelect" class="visually-hidden">Select a Country</label>
                 <select id="countrySelect" class="input-box">
                     <option value="">Select Country...</option>
-                    <option value="Pakistan">Pakistan</option>
-                    <option value="Turkey">Turkey</option>
-                    <option value="USA">USA</option>
-                    <option value="Japan">Japan</option>
-                    <option value="China">China</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Australia">Australia</option>
-                </select>
                 </select>
 
                 <button class="btn btn-primary" onclick="submitCountry()">
@@ -60,6 +52,26 @@
             <div id="globeViz"></div>
         </div>
     </div>
+
+    <script>
+        // Auth guard
+        if (!localStorage.getItem('wan_logged_in')) {
+            window.location.href = 'register.html';
+        }
+        // Show logged in user
+        const _u = localStorage.getItem('wan_user');
+        if (_u) {
+            const u = JSON.parse(_u);
+            const pill = document.getElementById('navUser');
+            if (pill) pill.textContent = '👤 ' + (u.username || u.email || '');
+        }
+        function logout() {
+            localStorage.removeItem('wan_logged_in');
+            localStorage.removeItem('wan_user');
+            window.location.href = 'register.html';
+        }
+    </script>
     <script src="script.js"></script>
 </body>
+
 </html>

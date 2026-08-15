@@ -76,4 +76,20 @@ CREATE TABLE [User] (
     Role      NVARCHAR(50)  NOT NULL DEFAULT 'viewer'
     CHECK (Role IN ('admin','analyst','viewer'))
 );
+-- COMPLETE USER TABLE FOR SATELLITE IMAGERY SYSTEM
 
+CREATE TABLE [User_Profile] (
+    User_ID          INT PRIMARY KEY IDENTITY(1,1),
+    User_Name        VARCHAR(50)  NOT NULL UNIQUE,
+    Email            VARCHAR(100) NOT NULL UNIQUE,
+    Password         VARCHAR(255) NOT NULL,
+    First_Name       VARCHAR(50)  NOT NULL,
+    Last_Name        VARCHAR(50)  NOT NULL,
+    Father_Name      VARCHAR(100) NOT NULL,
+    Date_Of_Birth    DATE         NOT NULL,
+    Gender           CHAR(1)      ,
+    CNIC             VARCHAR(15)  UNIQUE,  -- 12345-1234567-1
+    Phone_No         VARCHAR(15)  NOT NULL UNIQUE,
+    Country          VARCHAR(100) NOT NULL,
+    Full_Address     VARCHAR(255)   
+);
